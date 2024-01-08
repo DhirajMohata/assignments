@@ -40,7 +40,6 @@ function decodeJwt(token) {
     // Your code here
 }
 
-
 module.exports = {
   signJwt,
   verifyJwt,

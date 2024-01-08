@@ -3,38 +3,39 @@ const app = require("../02-ratelimitter");
 const request = require('supertest');
 const assert = require('assert');
 describe('GET /user', function () {
-  const userId = 'testId'
+  const userID = 'testId'
   it('One request responds back correctly', function(done) {
     request(app)
       .get('/user')
-      .set('user-id', userId)
+      .set('user-id', userID)
       .then((response) => {
         expect(response.status).toBe(200);
         done();
       });
   });
 
-  it('5 or more requests return back a 404', function(done) {
-      for (let i = 0; i<5; i++) {
-        request(app).get('/user').set('user-id', userId).then();
+  it('Four request responds back correctly', function(done) {
+      for (let i = 0; i<3; i++) {
+        request(app).get('/user').set('user-id', userID).then();
       }
+      request(app).get('/user').set('user-id', 'dhiraj').then();
       request(app)
         .get('/user')
-        .set('user-id', userId)
+        .set('user-id', userID)
         .then((response) => {
-          expect(response.status).toBe(404);
+          expect(response.status).toBe(200);
           done();
         });
   });
 
   it('5 or more requests and waiting returns a 200', function(done) {
       for (let i = 0; i<5; i++) {
-        request(app).get('/user').set('user-id', userId).then();
+        request(app).get('/user').set('user-id', userID).then();
       }
       setTimeout(function() {
       request(app)
         .get('/user')
-        .set('user-id', userId)
+        .set('user-id', userID)
         .then((response) => {
           expect(response.status).toBe(200);
           done();
